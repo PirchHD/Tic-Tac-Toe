@@ -1,0 +1,3 @@
+C:\Users\PirchHD\Desktop\Project\Tic-Tac-Toe\TicTacToe\x64\Debug\TicTacToe.vcxprojAssemblyReference.cache
+C:\Users\PirchHD\Desktop\Project\Tic-Tac-Toe\TicTacToe\x64\Debug\TicTacToe.Game.resources
+C:\Users\PirchHD\Desktop\Project\Tic-Tac-Toe\TicTacToe\x64\Debug\TicTacToe.vcxproj.GenerateResource.cache
