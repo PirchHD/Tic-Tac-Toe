@@ -16,6 +16,13 @@ namespace TicTacToe {
 	{
 
 		bool wcisniety = true;
+		bool wygral = false;
+
+		int licznikX = 0;
+		int licznikO = 0;
+
+		String ^ winner;
+
 
 	public:
 		Game(void)
@@ -150,21 +157,23 @@ namespace TicTacToe {
 			// 
 			// button1
 			// 
-			this->button1->Location = System::Drawing::Point(38, 357);
+			this->button1->Location = System::Drawing::Point(25, 357);
 			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(75, 28);
+			this->button1->Size = System::Drawing::Size(88, 28);
 			this->button1->TabIndex = 2;
 			this->button1->Text = L"Reset";
 			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &Game::button1_Click);
 			// 
 			// button2
 			// 
-			this->button2->Location = System::Drawing::Point(173, 357);
+			this->button2->Location = System::Drawing::Point(160, 357);
 			this->button2->Name = L"button2";
-			this->button2->Size = System::Drawing::Size(75, 28);
+			this->button2->Size = System::Drawing::Size(88, 28);
 			this->button2->TabIndex = 3;
 			this->button2->Text = L"New Game";
 			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &Game::button2_Click);
 			// 
 			// A1
 			// 
@@ -175,6 +184,7 @@ namespace TicTacToe {
 			this->A1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::AutoSize;
 			this->A1->TabIndex = 4;
 			this->A1->TabStop = false;
+			this->A1->Tag = L"\?";
 			this->A1->Click += gcnew System::EventHandler(this, &Game::graj);
 			// 
 			// B1
@@ -186,6 +196,7 @@ namespace TicTacToe {
 			this->B1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::AutoSize;
 			this->B1->TabIndex = 5;
 			this->B1->TabStop = false;
+			this->B1->Tag = L"\?";
 			this->B1->Click += gcnew System::EventHandler(this, &Game::graj);
 			// 
 			// C1
@@ -197,6 +208,7 @@ namespace TicTacToe {
 			this->C1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::AutoSize;
 			this->C1->TabIndex = 6;
 			this->C1->TabStop = false;
+			this->C1->Tag = L"\?";
 			this->C1->Click += gcnew System::EventHandler(this, &Game::graj);
 			// 
 			// A2
@@ -208,6 +220,7 @@ namespace TicTacToe {
 			this->A2->SizeMode = System::Windows::Forms::PictureBoxSizeMode::AutoSize;
 			this->A2->TabIndex = 7;
 			this->A2->TabStop = false;
+			this->A2->Tag = L"\?";
 			this->A2->Click += gcnew System::EventHandler(this, &Game::graj);
 			// 
 			// B2
@@ -219,6 +232,7 @@ namespace TicTacToe {
 			this->B2->SizeMode = System::Windows::Forms::PictureBoxSizeMode::AutoSize;
 			this->B2->TabIndex = 8;
 			this->B2->TabStop = false;
+			this->B2->Tag = L"\?";
 			this->B2->Click += gcnew System::EventHandler(this, &Game::graj);
 			// 
 			// C2
@@ -230,6 +244,7 @@ namespace TicTacToe {
 			this->C2->SizeMode = System::Windows::Forms::PictureBoxSizeMode::AutoSize;
 			this->C2->TabIndex = 9;
 			this->C2->TabStop = false;
+			this->C2->Tag = L"\?";
 			this->C2->Click += gcnew System::EventHandler(this, &Game::graj);
 			// 
 			// A3
@@ -241,6 +256,7 @@ namespace TicTacToe {
 			this->A3->SizeMode = System::Windows::Forms::PictureBoxSizeMode::AutoSize;
 			this->A3->TabIndex = 10;
 			this->A3->TabStop = false;
+			this->A3->Tag = L"\?";
 			this->A3->Click += gcnew System::EventHandler(this, &Game::graj);
 			// 
 			// B3
@@ -252,6 +268,7 @@ namespace TicTacToe {
 			this->B3->SizeMode = System::Windows::Forms::PictureBoxSizeMode::AutoSize;
 			this->B3->TabIndex = 11;
 			this->B3->TabStop = false;
+			this->B3->Tag = L"\?";
 			this->B3->Click += gcnew System::EventHandler(this, &Game::graj);
 			// 
 			// C3
@@ -263,6 +280,7 @@ namespace TicTacToe {
 			this->C3->SizeMode = System::Windows::Forms::PictureBoxSizeMode::AutoSize;
 			this->C3->TabIndex = 12;
 			this->C3->TabStop = false;
+			this->C3->Tag = L"\?";
 			this->C3->Click += gcnew System::EventHandler(this, &Game::graj);
 			// 
 			// imageList1
@@ -295,6 +313,7 @@ namespace TicTacToe {
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
 			this->Name = L"Game";
+			this->Tag = L"";
 			this->Text = L"Game";
 			this->Load += gcnew System::EventHandler(this, &Game::Game_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->A1))->EndInit();
@@ -320,13 +339,83 @@ private: System::Void graj(System::Object^ sender, System::EventArgs^ e) {
 
 	if (wcisniety) {
 		zdjecie->Image = imageList1->Images[1];
+		zdjecie->Tag = "X";
 	}
 	else {
 		zdjecie->Image = imageList1->Images[0];
+		zdjecie->Tag = "O";
 	}
 	wcisniety = !wcisniety;
 	zdjecie->Enabled = false;
+	wygrana();
+}
 
+private: Void wygrana() {
+	
+	//wygrana w poziomie
+	if ((A1->Tag == B1->Tag) && (B1->Tag == C1->Tag) && (A1->Tag != "?")) wygral = true;
+	if ((A2->Tag == B2->Tag) && (B2->Tag == C2->Tag) && (A2->Tag != "?")) wygral = true;
+	if ((A3->Tag == B3->Tag) && (B3->Tag == C3->Tag) && (A3->Tag != "?")) wygral = true;
+
+	//wygrana w pionie
+	if ((A1->Tag == A2->Tag) && (A2->Tag == A3->Tag) && (A1->Tag != "?")) wygral = true;
+	if ((B1->Tag == B2->Tag) && (B2->Tag == B3->Tag) && (B1->Tag != "?")) wygral = true;
+	if ((C1->Tag == C2->Tag) && (C2->Tag == C3->Tag) && (C1->Tag != "?")) wygral = true;
+
+	//wygrana przekatne
+	if ((A1->Tag == B2->Tag) && (B2->Tag == C3->Tag) && (A1->Tag != "?")) wygral = true;
+	if ((C1->Tag == B2->Tag) && (B2->Tag == A3->Tag) && (C1->Tag != "?")) wygral = true;
+
+
+	if (wygral) {
+		for each (Control ^ element in this->Controls) {
+			if(element->GetType() == PictureBox::typeid) element->Enabled = false;
+		}
+		if (wcisniety) {
+			licznikO++;
+			lbLicznikO->Text = Convert::ToString(licznikO);
+			winner = "O";
+		}
+		else {
+			licznikX++;
+			lbLicznikX->Text = Convert::ToString(licznikX);
+			winner = "X";
+		}
+
+		MessageBox::Show("Wygrana:" + winner, "TIC TAC TOE", MessageBoxButtons::OK, MessageBoxIcon::Asterisk);
+	}
+
+}
+
+	private: Void Restart() {
+		for each (Control ^ element in this->Controls)
+		{
+			try {
+				PictureBox^ zdjecie = (PictureBox^)element;
+				zdjecie->Enabled = true;
+				zdjecie->Tag = "?";
+				zdjecie->Image = imageList1->Images[2];
+			}
+			catch (...) {
+
+			}
+		}
+	}
+
+
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	wygral = false;
+	Restart();
+}
+
+
+private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+	wygral = false;
+	Restart();
+	licznikO = 0; 
+	licznikX = 0;
+	lbLicznikO->Text = "0";							//  <---   the same solution but another way
+	lbLicznikX->Text = Convert::ToString(licznikX);  // <---   the same solution but another way
 }
 };
 }
